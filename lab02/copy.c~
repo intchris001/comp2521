@@ -1,0 +1,32 @@
+Item QueueDequeue(Queue q) {
+    
+    q->frontIndex = (q->frontIndex + 1)%q->capacity;
+    q->size--;
+    
+    return q->items[q->frontIndex];
+}
+
+void QueueEnqueue(Queue q, Item it) {
+    //if queue q is empty ,so we just need add element to the  struct queue q'sfrontindex postion
+    //and size plus 1
+    if (q->size == 0) {
+        q->items[q->frontIndex] = it;
+        q->size ++;
+        return;
+    }
+    //then we need backindex to enqueue ,then we need to calculate backindex by size and frontindex 
+    int backIndex = (q->frontIndex + (q->size -1))%(q->capacity);
+    //case 1:if q not full
+    if (q->size < q->capacity){
+    //return te the top of queue
+        if ((backIndex+1) > q->capacity) {
+            q->items[(backIndex+1)%q->capacity] = it; 
+        }
+    // not return 
+        else {
+            q->items[backIndex+1] = it;
+        }
+    //case 2:q is full ,then need to extend item size and capacity of q
+    
+    
+}
