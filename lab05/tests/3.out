@@ -12,9 +12,9 @@ Jun 01 12:00 (height: 1)
 
 Inserting Feb 01 12:00
 
-Jun 01 12:00 (height: 2)
-┕━╸L: Mar 01 12:00 (height: 1)
-      ┕━╸L: Feb 01 12:00 (height: 0)
+Mar 01 12:00 (height: 1)
+┝━╸L: Feb 01 12:00 (height: 0)
+┕━╸R: Jun 01 12:00 (height: 0)
 
 Test 2
 
@@ -63,9 +63,9 @@ Jan 01 12:00 (height: 1)
 
 Inserting Sep 01 12:00
 
-Jan 01 12:00 (height: 2)
-┕━╸R: May 01 12:00 (height: 1)
-      ┕━╸R: Sep 01 12:00 (height: 0)
+May 01 12:00 (height: 1)
+┝━╸L: Jan 01 12:00 (height: 0)
+┕━╸R: Sep 01 12:00 (height: 0)
 
 Test 5
 
@@ -80,43 +80,43 @@ May 01 12:00 (height: 1)
 
 Inserting Feb 01 12:00
 
-May 01 12:00 (height: 2)
-┕━╸L: Apr 01 12:00 (height: 1)
-      ┕━╸L: Feb 01 12:00 (height: 0)
+Apr 01 12:00 (height: 1)
+┝━╸L: Feb 01 12:00 (height: 0)
+┕━╸R: May 01 12:00 (height: 0)
 
 Inserting Sep 01 12:00
 
-May 01 12:00 (height: 2)
-┝━╸L: Apr 01 12:00 (height: 1)
-│     ┕━╸L: Feb 01 12:00 (height: 0)
-┕━╸R: Sep 01 12:00 (height: 0)
+Apr 01 12:00 (height: 2)
+┝━╸L: Feb 01 12:00 (height: 0)
+┕━╸R: May 01 12:00 (height: 1)
+      ┕━╸R: Sep 01 12:00 (height: 0)
 
 Inserting Jul 01 12:00
 
-May 01 12:00 (height: 2)
-┝━╸L: Apr 01 12:00 (height: 1)
-│     ┕━╸L: Feb 01 12:00 (height: 0)
-┕━╸R: Sep 01 12:00 (height: 1)
-      ┕━╸L: Jul 01 12:00 (height: 0)
+Apr 01 12:00 (height: 2)
+┝━╸L: Feb 01 12:00 (height: 0)
+┕━╸R: Jul 01 12:00 (height: 1)
+      ┝━╸L: May 01 12:00 (height: 0)
+      ┕━╸R: Sep 01 12:00 (height: 0)
 
 Inserting Jun 01 12:00
 
-May 01 12:00 (height: 3)
+May 01 12:00 (height: 2)
 ┝━╸L: Apr 01 12:00 (height: 1)
 │     ┕━╸L: Feb 01 12:00 (height: 0)
-┕━╸R: Sep 01 12:00 (height: 2)
-      ┕━╸L: Jul 01 12:00 (height: 1)
-            ┕━╸L: Jun 01 12:00 (height: 0)
+┕━╸R: Jul 01 12:00 (height: 1)
+      ┝━╸L: Jun 01 12:00 (height: 0)
+      ┕━╸R: Sep 01 12:00 (height: 0)
 
 Inserting Mar 01 12:00
 
-May 01 12:00 (height: 3)
+May 01 12:00 (height: 2)
 ┝━╸L: Mar 01 12:00 (height: 1)
 │     ┝━╸L: Feb 01 12:00 (height: 0)
 │     ┕━╸R: Apr 01 12:00 (height: 0)
-┕━╸R: Sep 01 12:00 (height: 2)
-      ┕━╸L: Jul 01 12:00 (height: 1)
-            ┕━╸L: Jun 01 12:00 (height: 0)
+┕━╸R: Jul 01 12:00 (height: 1)
+      ┝━╸L: Jun 01 12:00 (height: 0)
+      ┕━╸R: Sep 01 12:00 (height: 0)
 
 Inserting Oct 01 12:00
 
@@ -124,10 +124,10 @@ May 01 12:00 (height: 3)
 ┝━╸L: Mar 01 12:00 (height: 1)
 │     ┝━╸L: Feb 01 12:00 (height: 0)
 │     ┕━╸R: Apr 01 12:00 (height: 0)
-┕━╸R: Sep 01 12:00 (height: 2)
-      ┝━╸L: Jul 01 12:00 (height: 1)
-      │     ┕━╸L: Jun 01 12:00 (height: 0)
-      ┕━╸R: Oct 01 12:00 (height: 0)
+┕━╸R: Jul 01 12:00 (height: 2)
+      ┝━╸L: Jun 01 12:00 (height: 0)
+      ┕━╸R: Sep 01 12:00 (height: 1)
+            ┕━╸R: Oct 01 12:00 (height: 0)
 
 Inserting Dec 01 12:00
 
@@ -135,10 +135,10 @@ May 01 12:00 (height: 3)
 ┝━╸L: Mar 01 12:00 (height: 1)
 │     ┝━╸L: Feb 01 12:00 (height: 0)
 │     ┕━╸R: Apr 01 12:00 (height: 0)
-┕━╸R: Sep 01 12:00 (height: 2)
-      ┝━╸L: Jul 01 12:00 (height: 1)
-      │     ┕━╸L: Jun 01 12:00 (height: 0)
+┕━╸R: Jul 01 12:00 (height: 2)
+      ┝━╸L: Jun 01 12:00 (height: 0)
       ┕━╸R: Oct 01 12:00 (height: 1)
+            ┝━╸L: Sep 01 12:00 (height: 0)
             ┕━╸R: Dec 01 12:00 (height: 0)
 
 Test 6

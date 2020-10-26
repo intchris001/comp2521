@@ -1,0 +1,7 @@
+Runway Landing Scheduler v1.0
+Enter ? to see the list of commands.
+> + 12 25 1200
+Successfully added Dec 25 12:00 to the schedule!
+> s 1
+Dec 25 12:00
+> 

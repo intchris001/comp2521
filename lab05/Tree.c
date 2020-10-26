@@ -3,38 +3,44 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "Time.h"
 #include "Tree.h"
 
 typedef struct node *Node;
-struct node {
+struct node
+{
     Time time;
-    int  height;
+    int height;
     Node left;
     Node right;
 };
 
-struct tree {
+struct tree
+{
     Node root;
 };
 
 ////////////////////////////////////////////////////////////////////////
 // Function Prototypes
+
 static void doFree(Node n);
 static Node doInsert(Node n, Time time);
 static Node rotateLeft(Node n);
 static Node rotateRight(Node n);
-static int  height(Node n);
-static int  max(int a, int b);
+static int height(Node n);
+static int max(int a, int b);
 static Node newNode(Time time);
 
 ////////////////////////////////////////////////////////////////////////
 // Constructor and Destructor
 
 // Creates a new empty tree
-Tree TreeNew(void) {
+Tree TreeNew(void)
+{
     Tree t = malloc(sizeof(*t));
-    if (t == NULL) {
+    if (t == NULL)
+    {
         fprintf(stderr, "Insufficient memory!\n");
         exit(EXIT_FAILURE);
     }
@@ -43,13 +49,16 @@ Tree TreeNew(void) {
 }
 
 // Frees all memory associated with the given tree
-void TreeFree(Tree t) {
+void TreeFree(Tree t)
+{
     doFree(t->root);
     free(t);
 }
 
-static void doFree(Node n) {
-    if (n != NULL) {
+static void doFree(Node n)
+{
+    if (n != NULL)
+    {
         doFree(n->left);
         doFree(n->right);
         TimeFree(n->time);
@@ -62,61 +71,71 @@ static void doFree(Node n) {
 
 // Inserts  a  copy of the given time into the tree if it is not already
 // in the tree
-void TreeInsert(Tree t, Time time) {
+void TreeInsert(Tree t, Time time)
+{
     t->root = doInsert(t->root, time);
 }
 
-static Node doInsert(Node n, Time time) {
-    if (n == NULL) {
+static Node doInsert(Node n, Time time)
+{
+    if (n == NULL)
+    {
         return newNode(time);
     }
 
     // insert recursively
     int cmp = TimeCmp(time, n->time);
-    if (cmp < 0) {
+    if (cmp < 0)
+    {
         n->left = doInsert(n->left, time);
-    } else if (cmp > 0) {
+    }
+    else if (cmp > 0)
+    {
         n->right = doInsert(n->right, time);
-    } else { // (cmp == 0)
+    }
+    else
+    { // (cmp == 0)
         // if time is already in the tree,
         // we can return straight away
         return n;
     }
 
     // insertion done
-    // fix the height of the current subtree
+    // correct the height of the current subtree
     n->height = 1 + max(height(n->left), height(n->right));
-    
+
     // rebalance the tree
     // TODO: Add your code here and change
     //       the return statement if needed
-    int balance = height(n->left) - height(n->right);
 
-    // Case 1. If balance > 1 - occurring on left subtree
-    // unbalanced tree, rotate right always
-    if (balance > 1) {
-        // If time of current node > time of left child's time
-        if (TimeCmp(time, n->left->time) > 0){ 
-            n->left = rotateLeft(n->left);
-            n = rotateRight(n);
-        }
+    /*
+    if (height(n->left) != height(n->right) && height (n) > 1) {
+        if (height(n->left) > height(n->right)) return rotateRight (n);
+        else return rotateLeft (n);
     }
-    // Case 2. If balance < -1 - occurring on right subtree
-    // unbalanced tree, rotate left always
-    if (balance < -1) {
-        // If time of current node is < time of right child's time
-        if (TimeCmp(time, n->right->time) < 0){
+*/
+    if ((height(n->left) - height(n->right)) > 1)
+    {
+        if (TimeCmp(time, n->left->time) > 0)
+            n->left = rotateLeft(n->left);
+
+        n = rotateRight(n);
+    }
+    else if ((height(n->right) - height(n->left)) > 1)
+    {
+        if (TimeCmp(time, n->right->time) < 0)
             n->right = rotateRight(n->right);
-            n = rotateLeft(n);
-        }
+        n = rotateLeft(n);
     }
 
     return n;
 }
 
-static Node newNode(Time time) {
+static Node newNode(Time time)
+{
     Node n = malloc(sizeof(*n));
-    if (n == NULL) {
+    if (n == NULL)
+    {
         fprintf(stderr, "Insufficient memory!\n");
         exit(EXIT_FAILURE);
     }
@@ -130,47 +149,73 @@ static Node newNode(Time time) {
 
 // Rotates  the  given  subtree left and returns the root of the updated
 // subtree.
-static Node rotateLeft(Node n) {
-    if (n == NULL || n->right == NULL){
+static Node rotateLeft(Node n)
+{
+    // TODO: Add your code here and change
+    //       the return statement if needed
+    // if the node is Null, return
+    if (n == NULL)
+        return NULL;
+    Node parent = n->right;
+    // there must be a right side
+    if (parent == NULL)
         return n;
-    }
-    Node a = n->right;
-    Node b = a->left;
-    
-    a->left = n;
-    n->right = b;
-    n->height = 1 + max(height(n->right), height(n->left));
-    a->height = 1 + n->height;
-    return a;
+    // take the left of node that may be deattached
+    // attach it to the right side of n
+    n->right = parent->left;
+    // bring n node to the left of its previous right
+    parent->left = n;
+
+    // adjust heights
+    parent->height = max(height(n->left), height(n->right)) + 2;
+    if (parent->left != NULL)
+        parent->left->height = parent->height - 1;
+    return parent;
 }
 
 // Rotates the given subtree right and returns the root of  the  updated
 // subtree.
-static Node rotateRight(Node n) {
-    if (n == NULL || n->left == NULL){
+static Node rotateRight(Node n)
+{
+    // TODO: Add your code here and change
+    //       the return statement if needed
+
+    // if the node is Null, return
+    if (n == NULL)
+        return NULL;
+    Node parent = n->left;
+    // there must be a left side
+    if (parent == NULL)
         return n;
-    }
-    Node a = n->left;
-    Node b = a->right;
-    
-    a->right = n;
-    n->left = b;
-    n->height = 1 + max(height(n->left), height(n->right));
-    a->height = 1 + n->height;
-    return a;
+    // take the right of node that may be deattached
+    // attach it to the left side of n
+    n->left = parent->right;
+    // bring n node to the right of its previous left
+    parent->right = n;
+
+    // adjust heights
+    parent->height = max(height(n->left), height(n->right)) + 2;
+    if (parent->right != NULL)
+        parent->right->height = parent->height - 1;
+    return parent;
 }
 
 // Returns  the height of a subtree while assuming that the height field
 // of the root node of the subtree is correct
-static int height(Node n) {
-    if (n == NULL) {
+static int height(Node n)
+{
+    if (n == NULL)
+    {
         return -1;
-    } else {
+    }
+    else
+    {
         return n->height;
     }
 }
 
-static int max(int a, int b) {
+static int max(int a, int b)
+{
     return a > b ? a : b;
 }
 
@@ -180,29 +225,41 @@ static int max(int a, int b) {
 // Returns the latest time in the tree that is earlier than or equal  to
 // the  given  time,  or  NULL if no such time exists. The returned time
 // should not be modified or freed.
-Time TreeFloor(Tree t, Time time) {
+
+Time TreeFloor(Tree t, Time time)
+{
     // TODO: Add your code here and change
     //       the return statement if needed
     //       You can create helper functions
     //       if needed
-
-    if (t == NULL) return NULL;
+    if (t == NULL)
+        return NULL;
     Node n = t->root;
     Time lastest = NULL;
-    while (n != NULL){
-        if (TimeCmp(n->time, time) == 0) return n->time;
-        else if (TimeCmp(n->time, time) < 0) {
+    while (n != NULL)
+    {
+        if (TimeCmp(n->time, time) == 0)
+            return n->time;
+        else if (TimeCmp(n->time, time) < 0)
+        {
             lastest = n->time;
-            if (n->right != NULL){
+            if (n->right != NULL)
+            {
                 n = n->right;
-            }else {
+            }
+            else
+            {
                 break;
             }
         }
-        else if (TimeCmp(n->time, time) > 0) {
-            if (n->left != NULL){
+        else if (TimeCmp(n->time, time) > 0)
+        {
+            if (n->left != NULL)
+            {
                 n = n->left;
-            }else {
+            }
+            else
+            {
                 break;
             }
         }
@@ -213,30 +270,40 @@ Time TreeFloor(Tree t, Time time) {
 // Returns the earliest time in the tree that is later than or equal  to
 // the  given  time,  or  NULL if no such time exists. The returned time
 // should not be modified or freed.
-
-Time TreeCeiling(Tree t, Time time) {
+Time TreeCeiling(Tree t, Time time)
+{
     // TODO: Add your code here and change
     //       the return statement if needed
     //       You can create helper functions
     //       if needed
-
-    if (t == NULL) return NULL;
+    if (t == NULL)
+        return NULL;
     Node n = t->root;
     Time earliest = NULL;
-    while (n != NULL){
-        if (TimeCmp(n->time, time) == 0) return n->time;
-        else if (TimeCmp(n->time, time) > 0) {
+    while (n != NULL)
+    {
+        if (TimeCmp(n->time, time) == 0)
+            return n->time;
+        else if (TimeCmp(n->time, time) > 0)
+        {
             earliest = n->time;
-            if (n->left != NULL){
+            if (n->left != NULL)
+            {
                 n = n->left;
-            }else {
+            }
+            else
+            {
                 break;
             }
         }
-        else if (TimeCmp(n->time, time) < 0) {
-            if (n->right != NULL){
+        else if (TimeCmp(n->time, time) < 0)
+        {
+            if (n->right != NULL)
+            {
                 n = n->right;
-            }else {
+            }
+            else
+            {
                 break;
             }
         }
@@ -252,12 +319,15 @@ Time TreeCeiling(Tree t, Time time) {
 
 static void doList(Node n);
 
-void TreeList(Tree t) {
+void TreeList(Tree t)
+{
     doList(t->root);
 }
 
-static void doList(Node n) {
-    if (n != NULL) {
+static void doList(Node n)
+{
+    if (n != NULL)
+    {
         doList(n->left);
         TimeShow(n->time);
         printf("\n");
@@ -271,10 +341,14 @@ static void doList(Node n) {
 typedef unsigned long long uint64;
 static void doShow(Node n, int level, uint64 arms);
 
-void TreeShow(Tree t) {
-    if (t->root != NULL && t->root->height >= 64) {
+void TreeShow(Tree t)
+{
+    if (t->root != NULL && t->root->height >= 64)
+    {
         printf("Tree is too tall!\n");
-    } else {
+    }
+    else
+    {
         doShow(t->root, 0, 0);
     }
 }
@@ -282,30 +356,41 @@ void TreeShow(Tree t) {
 // This  function  uses a hack to determine when to draw the arms of the
 // tree and relies on the tree being reasonably balanced. Don't  try  to
 // use this function if the tree is not an AVL tree!
-static void doShow(Node n, int level, uint64 arms) {
-    if (n == NULL) return;
+static void doShow(Node n, int level, uint64 arms)
+{
+    if (n == NULL)
+        return;
 
     TimeShow(n->time);
     printf(" (height: %d)\n", n->height);
 
-    if (n->left != NULL) {
-        for (int i = 0; i < level; i++) {
-            if ((1LLU << i) & arms) {
+    if (n->left != NULL)
+    {
+        for (int i = 0; i < level; i++)
+        {
+            if ((1LLU << i) & arms)
+            {
                 printf("│     ");
-            } else {
+            }
+            else
+            {
                 printf("      ");
             }
         }
         printf("%s", n->right != NULL ? "┝━╸L: " : "┕━╸L: ");
-        if (n->right != NULL) {
+        if (n->right != NULL)
+        {
             arms |= (1LLU << level);
-        } else {
+        }
+        else
+        {
             arms &= ~(1LLU << level);
         }
         doShow(n->left, level + 1, arms);
     }
 
-    if (n->right != NULL) {
+    if (n->right != NULL)
+    {
         // if (n->left != NULL) {
         //     for (int i = 0; i <= level; i++) {
         //         if ((1LLU << i) & arms) {
@@ -316,10 +401,14 @@ static void doShow(Node n, int level, uint64 arms) {
         //     }
         //     printf("\n");
         // }
-        for (int i = 0; i < level; i++) {
-            if ((1LLU << i) & arms) {
+        for (int i = 0; i < level; i++)
+        {
+            if ((1LLU << i) & arms)
+            {
                 printf("│     ");
-            } else {
+            }
+            else
+            {
                 printf("      ");
             }
         }
@@ -336,27 +425,35 @@ static void doShow(Node n, int level, uint64 arms) {
 
 static Node doInsertLeaf(Node n, Time time);
 
-void TreeRotateLeftAtRoot(Tree t) {
+void TreeRotateLeftAtRoot(Tree t)
+{
     t->root = rotateLeft(t->root);
 }
 
-void TreeRotateRightAtRoot(Tree t) {
+void TreeRotateRightAtRoot(Tree t)
+{
     t->root = rotateRight(t->root);
 }
 
-void TreeInsertLeaf(Tree t, Time time) {
+void TreeInsertLeaf(Tree t, Time time)
+{
     t->root = doInsertLeaf(t->root, time);
 }
 
-static Node doInsertLeaf(Node n, Time time) {
-    if (n == NULL) {
+static Node doInsertLeaf(Node n, Time time)
+{
+    if (n == NULL)
+    {
         return newNode(time);
     }
 
     int cmp = TimeCmp(time, n->time);
-    if (cmp < 0) {
+    if (cmp < 0)
+    {
         n->left = doInsertLeaf(n->left, time);
-    } else if (cmp > 0) {
+    }
+    else if (cmp > 0)
+    {
         n->right = doInsertLeaf(n->right, time);
     }
 
